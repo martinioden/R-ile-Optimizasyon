@@ -1,0 +1,30 @@
+# Doğrusal Programlama (Lineer Programming)
+#Doğrusal Programlama ile Sınırlandırılmış Optimizasyon
+
+#Bu sefer oluşturacağımız örneği farklı bir yolla çözelim ve kısıtımızda eşitlik olsun.
+#Kütüphane paketlerimizi indirmediysek indirelim ve kurulumunu yapalım.
+install.packages("Rsolnp")
+library(Rsolnp)
+
+#Kısıtlı optimizasyonumuzu “Rsolnp” kütüphanesi yardımıyla çözelim. 
+# Bunun için öncelikle amaç fonksiyonunu yazıyoruz, ardından kısıt fonksiyonu yazılır ve bir değere eşitlenir.
+# Ardından model oluşturulur.
+
+amacfonk <- function(x){ # Minimize edilecek amaç fonksiyonu, f(x,y)=2*x+6*y
+  2*x[1]+6*x[2]
+  }
+
+kısıt <- function(x){ # Kısıtımız (2*x^2 + y^3)=208
+  z1=2*x[1]^2+x[2]^3
+  return(c(z1))
+}
+
+kısıtdeger=c(208) # Eşitlik durumu, kısıtımız
+
+x0 <- c(1, 1) # rastgele parametre vektörü
+
+model <- solnp(x0,  fun=amacfonk, eqfun=kısıt, eqB=kısıtdeger) # Model
+
+model$pars  # x ve y değerlerimiz
+
+#Çıktımızda görüldüğü üzere X=X[1] değerini 23.9 ve Y=X[2] değerini -9.778 seçtiğimizde amaç fonksiyonu minimize edilmiş olur ve elde edilen minimum değer (kısıtın izin verdiği alanda) ise -10.8586 olmuş olur.
