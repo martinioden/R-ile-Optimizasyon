@@ -1,0 +1,30 @@
+#Doğrusal Programlama (Lineer Programming)
+#Doğrusal Programlama ile Sınırlandırılmış Optimizasyon
+
+#Çözümü R programında “lpSolveAPI” kütüphanesi yardımıyla yapalım.
+#Bu kütüphanede istediğiniz kısıtı “add.constraint()” fonksiyonu ile modele belirtiyoruz.
+#“make.lp()” fonksiyonu ile programa oluşturacağımız modelde 3 farklı değişken olduğunu belirtiyoruz (x,y,z ya da 1. kaynak, 2. kaynak, 3. kaynak gibi).
+#“set.objfn()” fonksiyonunun içine ise amaç fonksiyonun katsayıları yazılır.
+#Gerisini R programı bize veriyor.
+
+#Kütüphane paketlerimizi indirmediysek indirelim ve kurulumunu yapalım.
+install.packages("lpSolve")
+install.packages("lpSolveAPI")
+library(lpSolve)
+library(lpSolveAPI)
+
+
+lps.model <- make.lp(0,3) # modelimizde 3 değişken var
+
+add.constraint(lps.model, c(3,1,2), "<=", 300) # 1. kısıtımız (3*c1 + c2 + 2*c3 <= 300)
+add.constraint(lps.model, c(9,5,6), ">=", 100) # 2. kısıtımız (9*c1 + 5*c2 + 6*c3 >= 100)
+add.constraint(lps.model, c(6,-3,4), "=", 70) # 3. kısıtımız (6*c1 + 3*c2 + 4*c3 = 70)
+
+set.objfn(lps.model,c(-6,8,2)) # Minimize edilecek amaç fonksiyonu (-6*c1 + 8*c2 + 2*c3)
+solve(lps.model)
+
+get.variables(lps.model) # Minimize edilmiş amaç fonksiyonumuzun parametre değerleri (C1=11.66, c2=0, c3=0)
+
+print(lps.model) # Model matrisi
+
+#Çıktılarda görüldüğü üzere, kısıtımızı sağlayan değerler C1=11.66, C2=0, C3=0 değerlerinde problemimiz minimum noktaya ulaşacaktır.
